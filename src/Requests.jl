@@ -351,17 +351,11 @@
     # Write a file by mmaping it
     function write_file(stream,file::Union(IOStream,Base.File),datasize,doclose)
         @assert datasize != -1
-        write(stream,mmap_array(Uint8,(datasize,),file,position(file)))
+        write(stream, Libc.mmap(Uint8,(datasize,),file,position(file)))
         doclose && close(file)
     end
 
     # Write data already in memory
-    function write_file(stream,file::Union(String,Array{Uint8}),datasize,doclose)
-        @assert datasize != -1
-        write(stream,file)
-        doclose && close(file)
-    end
-
     function write_file(stream,file::Union(String,Array{Uint8}),datasize,doclose)
         @assert datasize != -1
         write(stream,file)
